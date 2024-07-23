@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.10.35013.160
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CapaPresentacionAdmin", "CapaPresentacionAdmin\CapaPresentacionAdmin.csproj", "{DCF04DCE-35AB-436E-8719-64E77F3FAA46}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{DCF04DCE-35AB-436E-8719-64E77F3FAA46}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DCF04DCE-35AB-436E-8719-64E77F3FAA46}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DCF04DCE-35AB-436E-8719-64E77F3FAA46}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DCF04DCE-35AB-436E-8719-64E77F3FAA46}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {7F863CDA-866A-4FD2-A0BD-0CCD358156E5}
+	EndGlobalSection
+EndGlobal
