@@ -11,9 +11,9 @@ namespace CapaEntidad
     {
         public int IDPedido { get; set; }
         public Cliente Cliente { get; set; }
-        public List<Producto> Productos { get; set; }
+        public Producto Producto { get; set; }
         public DateTime Fecha { get; set; }
-        public decimal Total { get; set; }
+        public int Cantidad { get; set; }
         public bool Estado { get; set; }
     }
 }

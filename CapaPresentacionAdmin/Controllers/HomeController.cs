@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using CapaNegocio;
+using CapaEntidad;
 
 namespace CapaPresentacionAdmin.Controllers
 {
@@ -13,18 +15,29 @@ namespace CapaPresentacionAdmin.Controllers
             return View();
         }
 
-        public ActionResult About()
+        [HttpGet]
+        public JsonResult ListarClientes()
         {
-            ViewBag.Message = "Your application description page.";
+            List<Cliente> ListaClientes = new CN_Cliente().ListarClientes();
 
-            return View();
+            return Json(new { data = ListaClientes }, JsonRequestBehavior.AllowGet);
         }
 
-        public ActionResult Contact()
+        [HttpPost]
+        public JsonResult RegistrarCliente(Cliente clienteARegistrar)
         {
-            ViewBag.Message = "Your contact page.";
+            string Mensaje = string.Empty;
+            object Resultado;
 
-            return View();
+            if(clienteARegistrar.IDCliente == 0)
+            {
+                Resultado = new CN_Cliente().Registrar(clienteARegistrar, out Mensaje);
+            } else
+            {
+                Resultado = new CN_Cliente().Editar(clienteARegistrar, out Mensaje);
+            }
+
+            return Json(new { Resultado = Resultado, Mensaje = Mensaje }, JsonRequestBehavior.AllowGet);
         }
     }
 }
