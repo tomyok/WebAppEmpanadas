@@ -39,32 +39,16 @@
             <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
                 <div class="sb-sidenav-menu">
                     <div class="nav">
-                        <div class="sb-sidenav-menu-heading">Interfaz</div>
-                        <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseLayouts" aria-expanded="false" aria-controls="collapseLayouts">
-                            <div class="sb-nav-link-icon"><i class="fas fa-user"></i></div>
+                        <div class="sb-sidenav-menu-heading">Clientes</div>
+                        <a class="nav-link" href="@Url.Action("Clientes","Mantenedor")">
+                            <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
                             Clientes
-                            <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
                         </a>
-                        <div class="collapse" id="collapseLayouts" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
-                            <nav class="sb-sidenav-menu-nested nav">
-                                <a class="nav-link" href="@Url.Action("Clientes","Cliente")">Clientes</a>
-                                <a class="nav-link" href="#!">Crear Nuevo Cliente</a>
-                                <a class="nav-link" href="#!">Modificar Cliente</a>
-                                <a class="nav-link" href="#!">Eliminar Cliente</a>
-                            </nav>
-                        </div>
-                        <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapsePages" aria-expanded="false" aria-controls="collapsePages">
+                        <div class="sb-sidenav-menu-heading">Productos</div>
+                        <a class="nav-link" href="@Url.Action("Producto","Mantenedor")">
                             <div class="sb-nav-link-icon"><i class="fas fa-pizza-slice"></i></div>
                             Productos
-                            <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
                         </a>
-                        <div class="collapse" id="collapsePages" aria-labelledby="headingTwo" data-bs-parent="#sidenavAccordion">
-                            <nav class="sb-sidenav-menu-nested nav">
-                                <a class="nav-link" href="#!">Crear Nuevo Producto</a>
-                                <a class="nav-link" href="#!">Modificar Producto</a>
-                                <a class="nav-link" href="#!">Eliminar Producto</a>
-                            </nav>
-                        </div>
                         <div class="sb-sidenav-menu-heading">Logistica</div>
                         <a class="nav-link" href="#!">
                             <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>

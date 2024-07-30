@@ -116,7 +116,6 @@ BEGIN
     DECLARE @HayCliente INT;
     SET @Resultado = 0;
 
-    -- Verificar que el cliente existe y el número de teléfono no pertenece a otro cliente
     SELECT @HayCliente = COUNT(*) 
     FROM Clientes 
     WHERE ID_Cliente = @IDCliente AND (Telefono = @Telefono OR NOT EXISTS (SELECT 1 FROM Clientes WHERE Telefono = @Telefono));
@@ -138,4 +137,72 @@ BEGIN
         SET @Mensaje = 'El cliente que intenta editar no existe o el teléfono pertenece a otro cliente.';
     END
 END;
+go
+Create Or Alter Procedure SP_CrearProducto(
+@Nombre Nvarchar(100),
+@Descripcion Nvarchar(255),
+@Precio Decimal(10,2),
+@Estado Bit,
+@Mensaje Varchar(500) output,
+@IDProducto Int output
+)
+As Begin
+		Set @IDProducto = 0
 
+		If Not Exists(Select * From Productos Where Nombre = @Nombre) Begin
+
+			Insert Into Productos(Nombre, Descripcion, Precio, Estado) Values (@Nombre, @Descripcion, @Precio, @Estado)
+
+			Set @IDProducto = SCOPE_IDENTITY()
+		End
+		Else Begin
+			Set @Mensaje = 'Ya existe un producto con ese Nombre.'
+		End
+End
+go
+Create Or Alter Procedure SP_EditarProducto(
+@IDProducto int,
+@Nombre Nvarchar(100),
+@Descripcion Nvarchar(255),
+@Precio Decimal(10,2),
+@Estado Bit,
+@Mensaje Varchar(500) output,
+@Resultado Int output
+)
+As Begin
+		Set @Resultado = 0
+
+		If Not Exists(Select * From Productos Where Nombre = @Nombre And ID_Producto != @IDProducto) Begin
+
+			Update Productos Set 
+			Nombre = @Nombre,
+			Descripcion = @Descripcion,
+			Precio = @Precio,
+			Estado = @Estado
+			Where ID_Producto = @IDProducto
+
+			Set @Resultado = 1
+		End
+		Else Begin
+			Set @Mensaje = 'No se pudo Editar el Producto.'
+		End
+End
+go
+Create Or Alter Procedure SP_EliminarProducto(
+@IDProducto Int,
+@Mensaje Varchar(100) Output,
+@Resultado Bit Output
+)
+As Begin
+		Set @Resultado = 0
+		If Not Exists(Select * From DetallePedido DV
+		Inner Join Productos P On P.ID_Producto = DV.ID_Producto
+		Where P.ID_Producto = @IDProducto)
+		Begin
+		Delete Top (1) From Productos Where  ID_Producto = @IDProducto
+		Set  @Resultado = 1
+		End
+		Else Begin
+		Set @Mensaje = 'No se puede eliminar el producto. Porque esta relacionado a un pedido.'
+		End
+End
