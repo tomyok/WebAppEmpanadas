@@ -17,11 +17,49 @@ namespace CapaPresentacionAdmin.Controllers
             return View();
         }
 
-        public ActionResult Producto()
+        //Pedidos
+        #region Pedidos
+        public ActionResult Pedido()
         {
             return View();
         }
 
+        [HttpGet]
+        public JsonResult ListarPedidos()
+        {
+            List<Pedido> ListaPedidos = new CN_Pedido().ListarPedidos();
+
+            return Json(new { data = ListaPedidos }, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+
+        public JsonResult RegistrarPedido(Pedido pedidoARegistrar)
+        {
+            string Mensaje = string.Empty;
+            object Resultado;
+
+            // Calcula el total del pedido
+            pedidoARegistrar.Total = pedidoARegistrar.Detalles.Sum(d => d.Producto.Precio * d.Cantidad);
+
+            if (pedidoARegistrar.IDPedido == 0)
+            {
+                Resultado = new CN_Pedido().Registrar(pedidoARegistrar, out Mensaje);
+            }
+            else
+            {
+                Resultado = new CN_Pedido().Editar(pedidoARegistrar, out Mensaje);
+            }
+
+            return Json(new { Resultado = Resultado, Mensaje = Mensaje }, JsonRequestBehavior.AllowGet);
+        }
+        #endregion
+        //Productos
+        #region Producto
+        public ActionResult Producto()
+        {
+            return View();
+        }
         [HttpGet]
         public JsonResult ListarProductos()
         {
@@ -69,5 +107,6 @@ namespace CapaPresentacionAdmin.Controllers
 
             return Json(new { Respuesta = Respuesta, Mensaje = Mensaje }, JsonRequestBehavior.AllowGet);
         }
+        #endregion
     }
 }

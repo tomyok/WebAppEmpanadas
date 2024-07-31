@@ -206,3 +206,94 @@ As Begin
 		Set @Mensaje = 'No se puede eliminar el producto. Porque esta relacionado a un pedido.'
 		End
 End
+go
+CREATE OR ALTER PROCEDURE SP_CrearPedido(
+    @IDCliente INT,
+	@FechaPedido Datetime,
+    @Total DECIMAL(10, 2),
+    @Estado CHAR,
+    @Mensaje VARCHAR(500) OUTPUT,
+    @IDPedido INT OUTPUT
+)
+AS
+BEGIN
+    SET @IDPedido = 0
+
+    IF @Estado NOT IN ('T', 'P')
+    BEGIN
+        SET @Mensaje = 'Estado inválido. Debe ser ''T'' o ''P''.'
+    END
+    ELSE
+    BEGIN
+        INSERT INTO Pedidos (ID_Cliente, FechaPedido, Total, Estado)
+        VALUES (@IDCliente, @FechaPedido, @Total, @Estado)
+
+        SET @IDPedido = SCOPE_IDENTITY()
+    END
+END
+GO
+
+CREATE OR ALTER PROCEDURE SP_EditarPedido(
+    @IDPedido INT,
+    @Total DECIMAL(10, 2),
+    @Estado CHAR,
+    @Mensaje VARCHAR(500) OUTPUT,
+    @Resultado INT OUTPUT
+)
+AS
+BEGIN
+    SET @Resultado = 0
+
+    IF @Estado NOT IN ('T', 'P')
+    BEGIN
+        SET @Mensaje = 'Estado inválido. Debe ser ''T'' o ''P''.'
+    END
+    ELSE
+    BEGIN
+        UPDATE Pedidos
+        SET 
+            Total = @Total,
+            Estado = @Estado
+        WHERE ID_Pedido = @IDPedido
+
+        IF @@ROWCOUNT > 0
+        BEGIN
+            SET @Resultado = 1
+        END
+        ELSE
+        BEGIN
+            SET @Mensaje = 'No se pudo editar el pedido.'
+        END
+    END
+END
+GO
+
+CREATE OR ALTER PROCEDURE SP_EliminarPedido(
+    @IDPedido INT,
+    @Mensaje VARCHAR(100) OUTPUT,
+    @Resultado BIT OUTPUT
+)
+AS
+BEGIN
+    SET @Resultado = 0
+
+    IF NOT EXISTS (SELECT * FROM DetallePedido WHERE ID_Pedido = @IDPedido)
+    BEGIN
+        DELETE FROM Pedidos
+        WHERE ID_Pedido = @IDPedido
+
+        IF @@ROWCOUNT > 0
+        BEGIN
+            SET @Resultado = 1
+        END
+        ELSE
+        BEGIN
+            SET @Mensaje = 'No se pudo eliminar el pedido.'
+        END
+    END
+    ELSE
+    BEGIN
+        SET @Mensaje = 'No se puede eliminar el pedido porque está relacionado con un detalle de pedido.'
+    END
+END
+GO

@@ -482,6 +482,7 @@
     <Content Include="webfonts\fa-brands-400.eot" />
     <Content Include="Views\Mantenedor\Clientes.cshtml" />
     <Content Include="Views\Mantenedor\Producto.cshtml" />
+    <Content Include="Views\Mantenedor\Pedido.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
