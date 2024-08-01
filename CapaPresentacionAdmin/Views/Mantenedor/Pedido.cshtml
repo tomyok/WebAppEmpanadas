@@ -30,9 +30,9 @@
         <thead>
             <tr>
                 <th>Id</th>
-                <th>Nombre</th>
-                <th>Apellido</th>
-                <th>Telefono</th>
+                <th>Nombre Cliente</th>
+                <th>Producto</th>
+                <th>Cantidad</th>
                 <th>Estado</th>
                 <th>Acciones</th>
             </tr>
@@ -49,7 +49,7 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header bg-dark text-white">
-                <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                <h5 class="modal-title" id="exampleModalLabel">Crear Pedido</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
@@ -57,11 +57,15 @@
                 <input id="txtIDPedido" type="hidden" value="0" />
 
                 <div class="row g-2">
-
                     <div class="col-sm-6">
                         <label for="productoDropdown" class="form-label">Seleccionar Producto</label>
                         <select class="form-select" id="productoDropdown" name="productoSeleccionado">
-                            <option value="">Seleccione un producto</option>
+                            <option value="">Seleccione un Producto</option>
+                            <option value="1">Docena de carne</option>
+                            <option value="2">Media Docena de carne</option>
+                            <option value="3">Docena de charque</option>
+                            <option value="4">Media Docena de charque</option>
+                            <!-- Agregar más opciones según sea necesario -->
                         </select>
                     </div>
                     <div class="col-sm-6">
@@ -71,7 +75,10 @@
                     <div class="col-sm-6">
                         <label for="clienteDropdown" class="form-label">Seleccionar Cliente</label>
                         <select class="form-select" id="clienteDropdown" name="clienteSeleccionado">
-                            <option value="">Seleccione un cliente</option>
+                            <option value="">Seleccione un Cliente</option>
+                            <option value="1">Marta</option>
+                            <option value="1">Yoyo</option>
+                            <!-- Agregar opciones de cliente aquí -->
                         </select>
                     </div>
                     <div class="col-sm-6">
@@ -82,19 +89,31 @@
                         </select>
                     </div>
                     <input type="hidden" id="IDPedido">
-
                 </div>
+
                 <div class="row mt-3">
                     <div class="col-12">
-                        <div id="mensajeError" class="alert alert-danger" role="alert">
+                        <button type="button" class="btn btn-primary" id="agregarPedido">Agregar Pedido</button>
+                    </div>
+                </div>
+
+                <div class="row mt-3">
+                    <div class="col-12" id="productosSeleccionados">
+                        <!-- Aquí se mostrarán los productos seleccionados -->
+                    </div>
+                </div>
+
+                <div class="row mt-3">
+                    <div class="col-12">
+                        <div id="mensajeError" class="alert alert-danger" role="alert" style="display: none;">
                             A simple danger alert—check it out!
                         </div>
                     </div>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                    <button type="button" class="btn btn-primary btn-guardar" onclick="Guardar(null)">Guardar</button>
-                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                <button type="button" class="btn btn-primary btn-guardar" onclick="Guardar(null)">Guardar</button>
             </div>
         </div>
     </div>
@@ -103,6 +122,42 @@
 @section scripts{
     <script>
 
+        document.getElementById('agregarPedido').addEventListener('click', function () {
+            const productoDropdown = document.getElementById('productoDropdown');
+            const cantidadProducto = document.getElementById('cantidadProducto');
+            const clienteDropdown = document.getElementById('clienteDropdown');
+
+            const productoSeleccionado = productoDropdown.options[productoDropdown.selectedIndex];
+            const cantidad = cantidadProducto.value;
+            const clienteSeleccionado = clienteDropdown.options[clienteDropdown.selectedIndex];
+
+            if (productoSeleccionado.value && cantidad > 0 && clienteSeleccionado.value) {
+                const productosSeleccionados = document.getElementById('productosSeleccionados');
+                const productoDiv = document.createElement('div');
+                productoDiv.className = 'alert alert-info d-flex justify-content-between align-items-center';
+                productoDiv.innerHTML = `
+            <span data-product-id="${productoSeleccionado.value}" data-cantidad="${cantidad}" data-cliente-id="${clienteSeleccionado.value}">
+                Cliente: ${clienteSeleccionado.text} - Producto: ${productoSeleccionado.text} - Cantidad: ${cantidad}.
+            </span>
+            <button type="button" class="btn-close" aria-label="Close"></button>
+        `;
+
+                productoDiv.querySelector('.btn-close').addEventListener('click', function () {
+                    productosSeleccionados.removeChild(productoDiv);
+                });
+
+                productosSeleccionados.appendChild(productoDiv);
+
+                // Reset fields after adding
+                productoDropdown.selectedIndex = 0;
+                cantidadProducto.value = '';
+            } else {
+                alert('Seleccione un producto, una cantidad válida, y un cliente.');
+            }
+        });
+
+
+
         var tabladata;
         var filaSeleccionada;
 
@@ -110,15 +165,15 @@
             response: true,
             ordering: false,
             "ajax": {
-            url: '@Url.Action("ListarPedidos","Home")',
+            url: '@Url.Action("ListarPedidos","Mantenedor")',
             type: "GET",
             dataType: "json"
             },
             "columns": [
                 { "data": "IDPedido" },
-                { "data": "Nombre" },
-                { "data": "Apellido" },
-                { "data": "Telefono" },
+                { "data": "IDCliente" },
+                { "data": "Producto" },
+                { "data": "Cantidad" },
                 {
                     "data": "Estado", "render": function (estado) {
                         if(estado) {
@@ -147,18 +202,18 @@
         function modalPedido(json) {
 
                 $("#txtIDPedido").val(0)
-                $("#txtNombre").val("")
-                $("#txtApellido").val("")
-                $("#txtTelefono").val("")
+                $("#productoDropdown").val("")
+                $("#cantidadProducto").val("")
+                $("#clienteDropdown").val("")
                 $("#selectActivo").val(1)
 
             $("#mensajeError").hide();
 
             if (json != null) {
                     $("#txtIDPedido").val(json.IDPedido)
-                    $("#txtNombre").val(json.Nombre)
-                    $("#txtApellido").val(json.Apellido)
-                    $("#txtTelefono").val(json.Telefono)
+                $("#productoDropdown").val(json.Nombre)
+                $("#cantidadProducto").val(json.Apellido)
+                $("#clienteDropdown").val(json.Telefono)
                     $("#selectActivo").val(json.Estado == true ? 1 : 0)
                     var id = json.IDPedido;
                 }
@@ -226,14 +281,14 @@
 
                 var Pedido = {
                     IDPedido: $("#txtIDPedido").val(),
-                    Nombre: $("#txtNombre").val(),
-                    Apellido: $("#txtApellido").val(),
-                    Telefono: $("#txtTelefono").val(),
+                    Producto: $("#productoDropdown").val(),
+                    Cantidad: $("#cantidadProducto").val(),
+                    Cliente: $("#clienteDropdown").val(),
                     Estado: $("#selectActivo").val() == 1 ? true : false
                 }
 
                 $.ajax({
-                    url: '@Url.Action("RegistrarPedido", "Home")',
+                    url: '@Url.Action("RegistrarPedido", "Mantenedor")',
                     type: "POST",
                     data: JSON.stringify({ PedidoARegistrar: Pedido }),
                     dataType: "json",

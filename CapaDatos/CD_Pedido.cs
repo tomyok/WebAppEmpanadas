@@ -20,7 +20,7 @@ namespace CapaDatos
                 using (SqlConnection Oconnection = new SqlConnection(Conexion.Cn))
                 {
                     StringBuilder query = new StringBuilder();
-                    query.Append("Select p.ID_Pedido, p.FechaPedido, p.Total, p.Estado, c.ID_Cliente, c.Nombre[NombreCliente], c.Apellido[ApellidoCliente], c.Telefono[TelefonoCliente] From Pedidos p Inner Join Clientes c On p.ID_Cliente = c.ID_Cliente");
+                    query.Append("Select ID_Pedido, FechaPedido, Total, Estado, ID_Cliente From Pedidos");
 
                     SqlCommand cmd = new SqlCommand(query.ToString(), Oconnection);
                     cmd.CommandType = CommandType.Text;
